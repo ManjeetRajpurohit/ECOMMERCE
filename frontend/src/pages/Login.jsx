@@ -1,42 +1,40 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import { toast } from 'react-toastify'
-import axios from 'axios'
+import React, { useContext, useEffect, useState } from "react";
+import { ShopContext } from "../context/ShopContext.jsx";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Login() {
-  const [currentstate, setcurrentstate] = useState('Login')
-  const { token, setToken, navigate, backendUrl } = useContext(ShopContext)
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (token) {
-      navigate('/');
-    }
-  }, [token]);
+  const [currentState, setCurrentState] = useState("Login"); // "Login" | "Sign Up"
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
     try {
-      if (currentstate === 'Sign Up') {
-        const response = await axios.post(backendUrl + '/api/user/register', { name, email, password })
+      if (currentState === "Sign Up") {
+        const response = await axios.post(backendUrl + "/api/user/register", {
+          name,
+          email,
+          password,
+        });
+
         if (response.data.success) {
           setToken(response.data.token);
-          localStorage.setItem('token', response.data.token);
-          toast.success('Account created successfully!');
-          navigate('/');
         } else {
           toast.error(response.data.message);
         }
       } else {
-        const response = await axios.post(backendUrl + '/api/user/login', { email, password })
+        const response = await axios.post(backendUrl + "/api/user/login", {
+          email,
+          password,
+        });
+
         if (response.data.success) {
           setToken(response.data.token);
-          localStorage.setItem('token', response.data.token);
-          toast.success('Logged in successfully!');
-          navigate('/');
         } else {
           toast.error(response.data.message);
         }
@@ -45,37 +43,79 @@ export default function Login() {
       console.log(error);
       toast.error(error.message);
     }
-  }
+  };
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
 
   return (
-    <form onSubmit={onSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800'>
-      <div className='inline-flex items-center gap-2 mb-2 mt-10'>
-        <p className='prata-regular text-3xl'>{currentstate}</p>
-        <hr className='border-none h-[1.5px] w-8 bg-gray-800' />
+    <form
+      onSubmit={onSubmitHandler}
+      className="mx-auto flex max-w-sm flex-col gap-5 pt-20"
+    >
+      <div className="mb-2">
+        <h1 className="text-3xl font-bold text-white">{currentState}</h1>
       </div>
-      {currentstate === 'Login' ? '' : (
+
+      {currentState === "Sign Up" && (
         <input
+          required
+          type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          type="text"
-          className='w-full px-3 py-2 border border-gray-800'
-          placeholder='Name'
-          required
+          placeholder="Name"
+          className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-indigo-500"
         />
       )}
-      <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className='w-full px-3 py-2 border border-gray-800' placeholder='Email' required />
-      <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className='w-full px-3 py-2 border border-gray-800' placeholder='Password' required />
-      <div className='w-full flex justify-between text-sm mt-[-8px]'>
-        <p className='cursor-pointer'>Forgot your password?</p>
-        {
-          currentstate === 'Login'
-            ? <p onClick={() => setcurrentstate('Sign Up')} className='cursor-pointer'>Create account</p>
-            : <p onClick={() => setcurrentstate('Login')} className='cursor-pointer'>Login Here</p>
-        }
+
+      <input
+        required
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+        className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-indigo-500"
+      />
+
+      <input
+        required
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-indigo-500"
+      />
+
+      <div className="flex justify-between text-sm text-slate-400">
+        <span className="cursor-pointer hover:text-indigo-600">
+          Forgot your password?
+        </span>
+        {currentState === "Login" ? (
+          <span
+            onClick={() => setCurrentState("Sign Up")}
+            className="cursor-pointer hover:text-indigo-600"
+          >
+            Create account
+          </span>
+        ) : (
+          <span
+            onClick={() => setCurrentState("Login")}
+            className="cursor-pointer hover:text-indigo-600"
+          >
+            Login here
+          </span>
+        )}
       </div>
-      <button className='bg-black text-white font-light px-8 py-2 mt-4'>
-        {currentstate === 'Login' ? 'Sign In' : 'Sign Up'}
+
+      <button
+        type="submit"
+        className="mt-2 rounded-xl bg-indigo-600 px-8 py-4 font-semibold text-white transition hover:bg-indigo-700"
+      >
+        {currentState === "Login" ? "Sign In" : "Sign Up"}
       </button>
     </form>
-  )
+  );
 }

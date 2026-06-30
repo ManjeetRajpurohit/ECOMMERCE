@@ -1,5 +1,5 @@
 import fs from "fs";
-import imagekit from "../config/imagekit.js";
+import imagekit from "../config/imageKit.js";
 import productModel from "../models/productModel.js";
 
 // function for add product
@@ -86,11 +86,11 @@ const listproduct = async (req, res) => {
 
 // function for removing product
 const removeProduct = async (req, res) => {
-  try{
-    await productModel.findByIdAndDelete(req.body.id)
-    res.json({success:true,message:"Product Removed"})
-  }catch(error){
-     console.log(error)
+  try {
+    await productModel.findByIdAndDelete(req.body.id);
+    res.json({ success: true, message: "Product Removed" });
+  } catch (error) {
+    console.log(error);
 
     res.json({
       success: false,
@@ -101,18 +101,18 @@ const removeProduct = async (req, res) => {
 
 // function for single product info
 const singleproduct = async (req, res) => {
-    try{
-      const {productId}=req.body
-      const product=await productModel.findById(productId)
-      res.json({success:true,product})
-    }catch(error){
-         console.log(error)
+  try {
+    const { productId } = req.body;
+    const product = await productModel.findById(productId);
+    res.json({ success: true, product });
+  } catch (error) {
+    console.log(error);
 
     res.json({
       success: false,
       message: error.message,
     });
-    }
+  }
 };
 
 export { listproduct, removeProduct, singleproduct, addProduct };

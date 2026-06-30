@@ -1,99 +1,97 @@
-import React from 'react'
-import Title from '../components/Title'
-import { assets } from '../assets/assets'
-import NewsletterBox from '../components/NewsLetterBox'
+import React from "react";
+import Title from "../components/Title.jsx";
+import { assets } from "../assets/assets.js";
+import NewsLetterBox from "../components/NewsLetterBox.jsx";
+import { motion } from "framer-motion";
+import { Heart, Leaf, Truck } from "lucide-react";
 
 export default function About() {
-
   return (
-    <div>
+    <div className="border-t border-slate-800">
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="py-20 text-center"
+      >
+        <Title text1="About" text2="Us" />
+        <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-300">
+          We're a small team obsessed with making everyday fashion feel
+          considered — quality fabrics, honest pricing, and a shopping
+          experience that respects your time.
+        </p>
+      </motion.section>
 
-      <div className='text-2xl text-center pt-8 border-t'>
-        <Title text1={'ABOUT'} text2={'US'} />
-      </div>
-
-      <div className='my-10 flex flex-col md:flex-row gap-16'>
-
-        <img
-          className='w-full md:max-w-[450px]'
+      <section className="grid gap-14 pb-20 lg:grid-cols-2">
+        <motion.img
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
           src={assets.about_img}
           alt=""
+          className="w-full rounded-3xl shadow-xl"
         />
 
-        <div className='flex flex-col justify-center gap-6 md:w-2/4 text-gray-600'>
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+        >
+          <Title text1="Our" text2="Story" />
 
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Deserunt soluta earum vitae tempora repudiandae deleniti
-            doloribus repellat quas perspiciatis? Eaque quibusdam
-            assumenda ab, velit saepe architecto, beatae modi ipsam
-            debitis illum dicta suscipit! Veniam architecto incidunt
-            natus mollitia dolore laudantium modi aperiam. Blanditiis,
-            mollitia molestiae?
+          <p className="mt-6 leading-8 text-slate-300">
+            What started as a small idea has grown into a collection people
+            actually reach for every day. We work directly with manufacturers
+            to keep quality high and prices fair, cutting out the markup that
+            usually comes with "fast fashion."
           </p>
 
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Veniam blanditiis et expedita deleniti, repudiandae vel cum
-            adipisci fugit fuga. Harum voluptatibus quia, laudantium
-            cupiditate, mollitia, sed saepe quibusdam magnam facilis
-            culpa consequuntur! Ex quod perspiciatis quisquam sequi
-            officia aliquid impedit animi suscipit vero recusandae
-            debitis nisi omnis quibusdam tempora beatae qui quis
-            nostrum ipsum architecto ducimus nobis nulla, laudantium
-            soluta?
+          <p className="mt-4 leading-8 text-slate-300">
+            Every piece is chosen with the same question in mind: would we
+            wear this ourselves, season after season? If the answer's no,
+            it doesn't make the cut.
           </p>
+        </motion.div>
+      </section>
 
-          <b className='text-gray-800'>Our Mission</b>
-
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Aut sunt nobis temporibus modi, velit est? Architecto
-            officiis quia at soluta, alias voluptate? Vero,
-            ab necessitatibus!
-          </p>
-
+      <section className="pb-20">
+        <div className="mb-12 text-center">
+          <Title text1="Why" text2="Choose Us" />
         </div>
 
-      </div>
-
-      <div className='text-xl py-4'>
-        <Title text1={'WHY'} text2={'CHOOSE US'} />
-      </div>
-
-      <div className='flex flex-col md:flex-row text-sm mb-20'>
-
-        <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
-          <b>Quality Assurance</b>
-
-          <p className='text-gray-600'>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Soluta, velit.
-          </p>
+        <div className="grid gap-8 sm:grid-cols-3">
+          {[
+            {
+              icon: Heart,
+              title: "Made With Care",
+              desc: "Every product is checked for quality before it ships.",
+            },
+            {
+              icon: Leaf,
+              title: "Honest Pricing",
+              desc: "No inflated markups — fair prices, always.",
+            },
+            {
+              icon: Truck,
+              title: "Reliable Delivery",
+              desc: "Fast, tracked shipping on every order.",
+            },
+          ].map((f) => (
+            <motion.div
+              key={f.title}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="rounded-2xl border border-slate-800 p-8 text-center"
+            >
+              <f.icon size={30} className="mx-auto mb-4 text-indigo-600" />
+              <h3 className="font-semibold text-white">{f.title}</h3>
+              <p className="mt-2 text-sm text-slate-400">{f.desc}</p>
+            </motion.div>
+          ))}
         </div>
+      </section>
 
-        <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
-          <b>Convenience</b>
-
-          <p className='text-gray-600'>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Soluta, velit.
-          </p>
-        </div>
-
-        <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
-          <b>Exceptional Customer Service</b>
-
-          <p className='text-gray-600'>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Soluta, velit.
-          </p>
-        </div>
-
-      </div>
-
-      <NewsletterBox />
-
+      <NewsLetterBox />
     </div>
-  )
+  );
 }

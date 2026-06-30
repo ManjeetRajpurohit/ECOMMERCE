@@ -1,136 +1,201 @@
-import React, { useContext } from 'react'
-import { assets } from '../assets/assets'
-import { Link, NavLink } from 'react-router-dom'
-import { ShopContext } from '../context/ShopContext';
+import React, { useContext, useEffect, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext.jsx";
+import { assets } from "../assets/assets.js";
+import {
+  Search,
+  User,
+  ShoppingBag,
+  Menu,
+  X,
+  LogOut,
+  Package,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
-  const [visible, setVisible] = React.useState(false);
-  const {setShowSearch,getCartCount,navigate,token,setToken,setCartItems}=useContext(ShopContext);
-  const logout=()=>{
-    navigate('/login');
-    localStorage.removeItem('token');
-    setToken('');
+  const [visible, setVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const {
+    setShowSearch,
+    getCartCount,
+    navigate,
+    token,
+    setToken,
+    setCartItems,
+  } = useContext(ShopContext);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setToken("");
     setCartItems({});
+    navigate("/login");
   };
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Collection", path: "/collection" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
+
   return (
-    <div className="flex items-center justify-between py-5 font-medium">
+    <>
+      <header
+        className={`sticky top-0 z-50 text-slate-200 transition-all duration-300 ${
+          scrolled
+            ? "bg-slate-900/90 backdrop-blur-xl shadow-md"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="flex items-center justify-between py-5">
 
-     <Link to='/'>
-     <img src={assets.logo} alt="logo" className="w-36" />
-      </Link>
+          <Link to="/">
+            <img
+              src={assets.logo}
+              alt="logo"
+              className="w-36 transition hover:scale-105"
+            />
+          </Link>
 
-      <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
+          <nav className="hidden lg:flex items-center gap-10">
 
-        <NavLink className="flex flex-col items-center gap-1" to="/">
-          <p>Home</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
+            {navLinks.map((item) => (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                className={({ isActive }) =>
+                  `relative text-[15px] transition ${
+                    isActive
+                      ? "text-indigo-600 font-semibold"
+                      : "text-slate-200 hover:text-indigo-600"
+                  }`
+                }
+              >
+                {item.name}
+              </NavLink>
+            ))}
 
-        <NavLink className="flex flex-col items-center gap-1" to="/collection">
-          <p>Collection</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
+          </nav>
 
-        <NavLink className="flex flex-col items-center gap-1" to="/about">
-          <p>About</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
+          <div className="flex items-center gap-5">
 
-        <NavLink className="flex flex-col items-center gap-1" to="/contact">
-          <p>Contact</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
+            <button
+              onClick={() => setShowSearch(true)}
+              className="rounded-full p-2 transition hover:bg-slate-800"
+            >
+              <Search size={20} />
+            </button>
 
-      </ul>
+            <div className="relative group">
 
-      <div className="flex items-center gap-6">
+              <button
+                onClick={() => (!token ? navigate("/login") : null)}
+                className="rounded-full p-2 transition hover:bg-slate-800"
+              >
+                <User size={20} />
+              </button>
 
-        <img onClick={()=>setShowSearch(true)}
-          src={assets.search_icon}
-          alt="search"
-          className="w-5 cursor-pointer"
-        />
+              {token && (
+                <div className="invisible absolute right-0 top-12 w-48 rounded-2xl border border-slate-800 bg-slate-900 p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
 
-        <div className="group relative">
-          <img
-             onClick={()=>token?null:navigate('/login')}
-            src={assets.profile_icon}
-            alt="profile"
-            className="w-5 cursor-pointer"
-          />
-          {/* {Dropdown menu} */}
-          {
-            token &&  <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
+                  <button
+                    onClick={() => navigate("/orders")}
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition hover:bg-slate-800"
+                  >
+                    <Package size={18} />
+                    Orders
+                  </button>
 
-            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
+                  <button
+                    onClick={logout}
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-red-500 transition hover:bg-red-50"
+                  >
+                    <LogOut size={18} />
+                    Logout
+                  </button>
 
-              <p className="cursor-pointer hover:text-black">
-                My Profile
-              </p>
-
-              <p  onClick={()=>navigate('/orders')} className="cursor-pointer hover:text-black">
-                Orders
-              </p>
-
-              <p onClick={logout} className="cursor-pointer hover:text-black">
-                Logout
-              </p>
+                </div>
+              )}
 
             </div>
 
+            <Link
+              to="/cart"
+              className="relative rounded-full p-2 transition hover:bg-slate-800"
+            >
+              <ShoppingBag size={20} />
+
+              {getCartCount() > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[11px] font-semibold text-white">
+                  {getCartCount()}
+                </span>
+              )}
+            </Link>
+
+            <button
+              onClick={() => setVisible(true)}
+              className="rounded-full p-2 transition hover:bg-slate-800 lg:hidden"
+            >
+              <Menu size={22} />
+            </button>
+
           </div>
-          }
+
         </div>
+      </header>
 
-        <Link to="/cart" className="relative">
+      <AnimatePresence>
 
-          <img
-            src={assets.cart_icon}
-            alt="cart"
-            className="w-5"
-          />
+        {visible && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[100] bg-slate-900"
+          >
+            <div className="flex items-center justify-between border-b border-slate-800 p-6">
 
-          <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
-            {getCartCount()}
-          </p>
+              <img
+                src={assets.logo}
+                className="w-32 brightness-0 invert"
+                alt=""
+              />
 
-        </Link>
+              <button onClick={() => setVisible(false)} className="text-white">
+                <X size={28} />
+              </button>
 
-        <img
-          onClick={() => setVisible(true)}
-          src={assets.menu_icon}
-          alt="menu"
-          className="w-5 cursor-pointer sm:hidden"
-        />
+            </div>
 
-      </div>
+            <div className="mt-8 flex flex-col">
 
-      {/* sidebar menu for screen */}
+              {navLinks.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  onClick={() => setVisible(false)}
+                  className="border-b border-slate-800 px-8 py-5 text-lg text-white transition hover:bg-slate-800"
+                >
+                  {item.name}
+                </NavLink>
+              ))}
 
-      <div
-        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
-          visible ? "w-full" : "w-0"
-        }`}
-      >
+            </div>
 
-        <div className="flex flex-col text-gray-600">
+          </motion.div>
+        )}
 
-          <div className="flex items-center gap-4 p-3">
-
-            <img
-              onClick={() => setVisible(false)}
-              src={assets.dropdown_icon}
-              alt="logo"
-              className="h-4 rotate-180"
-            />
-            <p>Back</p>
-          </div>
-          <NavLink onClick={() => setVisible(false)} to='/' className="py-2 pl-6 border">HOME</NavLink>
-          <NavLink onClick={() => setVisible(false)} to='/collection' className="py-2 pl-6 border">collection</NavLink>
-          <NavLink onClick={() => setVisible(false)} to='/about' className="py-2 pl-6 border" >about</NavLink>
-          <NavLink onClick={() => setVisible(false)} to='/contact'className="py-2 pl-6 border">contact</NavLink>
-        </div>
-      </div>
-    </div>
-  )
+      </AnimatePresence>
+    </>
+  );
 }

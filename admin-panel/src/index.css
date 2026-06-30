@@ -1,18 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&family=Savate:ital,wght@0,200..900;1,200..900&display=swap');
 @import "tailwindcss";
-*{
-    font-family: Outfit;
+
+:root{
+  --primary:#F8FAFC;
+  --secondary:#94A3B8;
+  --accent:#4F46E5;
+  --background:#020617;
+  --surface:#0F172A;
+  --border:#1E293B;
+  --success:#10B981;
+  --danger:#EF4444;
 }
-select,input,textarea{
-    border:1px solid #c2c2c2;
-    outline-color:#c586A5;
-    border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -ms-border-radius: 4px;
-    -o-border-radius: 4px;
-}
-.active{
-    background-color: #ffebf5;
-    border-color: #C586A5;
+
+/* Wrapped in @layer base so this doesn't override Tailwind's
+   utility classes -- Tailwind v4 loads its own CSS in cascade
+   layers, and un-layered CSS always wins over layered CSS
+   regardless of specificity, which silently breaks every
+   utility class that touches the same properties otherwise. */
+@layer base {
+
+  *{
+      font-family: Outfit, sans-serif;
+  }
+
+  html, body, #root{
+      height: 100%;
+  }
+
+  body{
+      background: var(--background);
+      color: var(--primary);
+  }
+
+  select,
+  input,
+  textarea{
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--primary);
+      outline-color: var(--accent);
+      border-radius: 8px;
+  }
+
+  select:focus,
+  input:focus,
+  textarea:focus{
+      border-color: var(--accent);
+  }
+
+  .active{
+      background-color: rgba(79, 70, 229, 0.18);
+      border-color: var(--accent);
+      color: #ffffff;
+  }
+
 }

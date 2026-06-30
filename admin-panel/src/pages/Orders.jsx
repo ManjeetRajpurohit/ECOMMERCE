@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { backendUrl, currency } from '../App'
-import { assets } from '../assets/assets'
+import { backendUrl, currency } from '../App.jsx'
+import { assets } from '../assets/assets.js'
 
 const Orders = ({ token }) => {
 
@@ -60,9 +60,9 @@ const Orders = ({ token }) => {
 
     <div>
 
-      <h3 className='text-xl font-semibold mb-4'>Order Page</h3>
+      <h3 className='text-xl font-bold mb-6 text-white'>Order Page</h3>
 
-      <div>
+      <div className='flex flex-col gap-4'>
 
         {
 
@@ -70,14 +70,16 @@ const Orders = ({ token }) => {
 
             <div
               key={index}
-              className='grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start border-2 border-gray-200 p-5 md:p-8 my-3 text-sm text-gray-700'
+              className='grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-4 items-start rounded-[24px] border border-slate-800 bg-slate-900 p-6 md:p-8 text-sm text-slate-300 shadow-sm'
             >
 
-              <img
-                className='w-12'
-                src={assets.parcel_icon}
-                alt=""
-              />
+              <div className='w-12 h-12 rounded-xl overflow-hidden border border-slate-700'>
+                <img
+                  className='w-full h-full object-cover'
+                  src={assets.parcel_icon}
+                  alt=""
+                />
+              </div>
 
               <div>
 
@@ -87,7 +89,7 @@ const Orders = ({ token }) => {
 
                     order.items.map((item, index) => (
 
-                      <p className='py-0.5' key={index}>
+                      <p className='py-0.5 text-slate-300' key={index}>
 
                         {item.name} x {item.quantity}
 
@@ -103,7 +105,7 @@ const Orders = ({ token }) => {
 
                 </div>
 
-                <p className='mt-3 mb-2 font-medium'>
+                <p className='mt-3 mb-2 font-medium text-white'>
 
                   {order.address.firstName + " " + order.address.lastName}
 
@@ -144,7 +146,7 @@ const Orders = ({ token }) => {
 
                 <p>
 
-                  Payment : {order.payment ? 'Done' : 'Pending'}
+                  Payment : <span className={order.payment ? 'text-emerald-400' : 'text-amber-400'}>{order.payment ? 'Done' : 'Pending'}</span>
 
                 </p>
 
@@ -156,7 +158,7 @@ const Orders = ({ token }) => {
 
               </div>
 
-              <p className='text-sm sm:text-[15px]'>
+              <p className='text-sm sm:text-[15px] font-semibold text-white'>
 
                 {currency}{order.amount}
 
@@ -165,7 +167,7 @@ const Orders = ({ token }) => {
               <select
                onChange={(e)=>statusHandler(e,order._id)}
                 value={order.status}
-                className='p-2 font-semibold'
+                className='px-3 py-2 rounded-xl font-medium text-sm'
               >
 
                 <option value="Order Placed">

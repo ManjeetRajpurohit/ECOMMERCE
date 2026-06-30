@@ -1,33 +1,42 @@
-import React, { useContext } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import Title from './Title';
-const CartTotal = () => {
-  const {currency,delivery_fee,getCartAmount}=useContext(ShopContext);
+import React, { useContext } from "react";
+import { ShopContext } from "../context/ShopContext.jsx";
+import Title from "./Title.jsx";
+
+export default function CartTotal() {
+  const { currency, delivery_fee, getCartAmount } = useContext(ShopContext);
+
+  const subtotal = getCartAmount();
+  const total = subtotal === 0 ? 0 : subtotal + delivery_fee;
 
   return (
-    <div className='w-full'>
-        <div className='text-2xl'>
-          <Title text1={'CART'} text2={'TOTALS'}/>
-        </div>
-        <div className='flex flex-col gap-2 mt-2 text-sm'>
-          <div className='flex justify-between'>
-            <p>Subtotal</p>
-            <p>{currency}{getCartAmount()}.00</p>
-          </div>
-          <hr/>
-          <div className='flex justify-between'>
-             <p>Shipping Fee</p>
-             <p>{currency}{delivery_fee}.00</p>
-          </div>
-           <hr/>
-           <div className='flex justify-between'>
-            <b>Total</b>
-            <b>{currency}{getCartAmount()===0?0:getCartAmount()+delivery_fee}.00</b>
+    <div className="rounded-2xl border border-slate-800 p-6">
+      <Title text1="Cart" text2="Totals" />
 
-           </div>
+      <div className="mt-6 space-y-4 text-sm">
+        <div className="flex justify-between text-slate-300">
+          <span>Subtotal</span>
+          <span>
+            {currency}
+            {subtotal}.00
+          </span>
         </div>
+
+        <div className="flex justify-between text-slate-300">
+          <span>Shipping Fee</span>
+          <span>
+            {currency}
+            {subtotal === 0 ? 0 : delivery_fee}.00
+          </span>
+        </div>
+
+        <div className="border-t border-slate-800 pt-4 flex justify-between text-base font-bold text-white">
+          <span>Total</span>
+          <span>
+            {currency}
+            {total}.00
+          </span>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
-
-export default CartTotal
